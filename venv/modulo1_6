@@ -1,0 +1,29 @@
+import json, random
+
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/practica_uno/geojsonFile')
+def getData():
+
+########### CREAMOS EL ARCHIVO MODIFICADO ########
+    with open('mexico-transport-current.geojson') as f:
+        data = json.load(f)
+
+    for feature in data['features']:
+        feature['properties']['bancos'] = random.randint(1,100)
+        feature['properties']['escuelas'] = random.randint(1, 100)
+        feature['properties']['mercados'] = random.randint(1, 100)
+
+    with open('accesibilidad.geojson', 'w') as salida:
+       json.dump(data, salida)
+
+#####  LEEMOS EL ARCHIVO ##########3
+    with open('accesibilidad.geojson') as f:
+        jsonFile = json.load(f)
+    return jsonify(jsonFile)
+
+
+if __name__ == "__main__":
+    app.run(host='localhost', port=5001, debug=True)
